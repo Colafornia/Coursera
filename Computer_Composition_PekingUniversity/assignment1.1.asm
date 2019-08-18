@@ -28,32 +28,32 @@ exit_str: .asciiz "#Program is stopped#"
 
             .text
             .globl main
-main:       li $v0, 12 # read input
+main:       li $v0, 12         # read input
             syscall
-            sub $t1, $v0, 63 # '?' assic is 63
+            sub $t1, $v0, 63   # '?' assic is 63
             beqz $t1, exit
-            sub $t1, $v0, 48 # '0'
-            slt $s0, $t1, $0 # if t1 < 0 then s0 = 1
+            sub $t1, $v0, 48   # '0'
+            slt $s0, $t1, $0   # if t1 < 0 then s0 = 1
             bnez $s0, others
 
             # is number?
-            sub $t2, $t1, 10 # number
-            slt $s1, $t2, $0 # if t2 < 0 then s1 = 1
+            sub $t2, $t1, 10   # number
+            slt $s1, $t2, $0   # if t2 < 0 then s1 = 1
             bnez $s1, getnumber
 
             # is capital?
             sub $t2, $v0, 91
-            slt $s3, $t2, $0 # if v0 <= 'Z' then s3 = 1
-            sub $t3, $v0, 64 
-            sgt $s4, $t3, $0 # if v0 >='A' then s4 = 1
-            and $s0, $s3, $s4 # if s3 == 1 && s4 == 1 
+            slt $s3, $t2, $0   # if v0 <= 'Z' then s3 = 1
+            sub $t3, $v0, 64
+            sgt $s4, $t3, $0   # if v0 >='A' then s4 = 1
+            and $s0, $s3, $s4  # if s3 == 1 && s4 == 1
             bnez $s0, getupperword
 
             # is lower case?
             sub $t2, $v0, 123
-            slt $s3, $t2, $0 # if v0 <= 'z' then s3 = 1
-            sub $t3, $v0, 96 
-            sgt $s4, $t3, $0 # if v0 >= 'a' then s4 = 1
+            slt $s3, $t2, $0   # if v0 <= 'z' then s3 = 1
+            sub $t3, $v0, 96
+            sgt $s4, $t3, $0   # if v0 >= 'a' then s4 = 1
             and $s0, $s3, $s4
             bnez $s0, getlowerword
             j others
@@ -94,15 +94,14 @@ getlowerword:   sub $t3, $t3, 1
             j main
 
 others:     and $a0, $0, $0
-            add $a0, $a0, 42 # '*'
-            li $v0, 11 # print result
+            add $a0, $a0, 42      # '*'
+            li $v0, 11            # print result
             syscall
             j main
 
-exit:       
-	    add $a0, $0, '\n'
-	    li $v0, 11
-    	    syscall
+exit:       add $a0, $0, '\n'
+            li $v0, 11
+            syscall
             la $a0, exit_str
-	    li $v0, 4 # exit
+            li $v0, 4            # print exit info
             syscall
